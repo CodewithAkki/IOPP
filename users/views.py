@@ -27,8 +27,11 @@ class CreateUser (generics.ListCreateAPIView):
         return Response({"message":"fail to register",'userData':user.data,"status ": status.HTTP_400_BAD_REQUEST})  
     def get(self, request,format = None): 
             user_data = user.objects.all()
-            print(user_data)
-            return Response({"status ": status.HTTP_201_CREATED})
+            serializer=UserSerializer(data=user_data,many=True)
+            if serializer.is_valid():
+                return Response({"data":serializer.data,"status ": status.HTTP_201_CREATED})
+            return Response({"data":serializer.errors,"status ": status.HTTP_401_UNAUTHORIZED})
+            
            
   
 class UpdateDeleteRetrive(generics.RetrieveUpdateDestroyAPIView):
