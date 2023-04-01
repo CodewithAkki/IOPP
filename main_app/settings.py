@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zf6i&l#osl005@(v1#kcqw1#r+1lzjnl+rcu2-!^&w27w!da&-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app','.now.sh']
 
 
 # Application definition
@@ -141,3 +141,6 @@ SWAGGER_SETTINGS = {
       }
    }
 }
+import os
+STATICFILES_DIRS = os.path.join(BASE_DIR,"static"),
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build','static'),
