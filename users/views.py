@@ -17,15 +17,16 @@ class CreateUser (generics.ListCreateAPIView):
     def post(self, request,format = None):
         
         user_data = UserSerializer(data = request.data)
+        print(user_data)
         if user_data.is_valid():
             user_data.save()
-            current_user = user.objects.get(email=request.data['email'])
-            current_user.set_password(request.data['password'])
-            current_user.is_active=True
-            current_user.save()
-            user = UserSerializer(current_user)
-            return Response({"message":"user registered sccessfully",'userData':user.data,"status ": status.HTTP_201_CREATED})
-        return Response({"message":user_data.errors,'userData':user.data,"status ": status.HTTP_400_BAD_REQUEST})  
+            print(request.data['email'])
+            user_object = user.objects.get(email=request.data['email'])
+            user_object.set_password(request.data['password'])
+            user_object.save()
+            serializer=UserSerializer(user_object)
+            return Response({"message":"user registered sccessfully",'userData':serializer.data,"status ": status.HTTP_201_CREATED})
+        return Response({"message":user_data.errors,"status ": status.HTTP_400_BAD_REQUEST})  
     
     def get(self, request,format = None): 
             try:
@@ -42,5 +43,12 @@ class UpdateDeleteRetrive(generics.RetrieveUpdateDestroyAPIView):
         serializer_class = UserSerializer
         filter_backends = [filters.SearchFilter]
         search_fields = ['=email']
+
+        def patch(self, request, *args, **kwargs):
+            user_data= user.objects.get(email=kwargs["pk"])
+            user_data.set_password(request.data['password'])
+            user_data.save()
+            serializer=UserSerializer(user_data)
+            return Response({"message":"Password has been changed","data":serializer.data,"status ": status.HTTP_201_CREATED})
 
         

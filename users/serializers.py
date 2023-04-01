@@ -14,6 +14,7 @@ class UserSerializer (serializers.ModelSerializer):
             'address',
             'birthdate',
             'email',
+            'password',
             'is_teacher',
             'is_guid',
             'is_AICTEmember',

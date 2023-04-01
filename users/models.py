@@ -33,8 +33,7 @@ class user (AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects=CustomUserManager()
-    def __str__(self) -> str:
-        return self.email
+
 
 @receiver(post_save,sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance = None,created=False,**kwargs):
