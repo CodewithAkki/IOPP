@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "corsheaders",
     'channels',
+    'events',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'main_app.wsgi.application'
+ASGI_APPLICATION = 'main_app.asgi.application'
 
 
 # Database
