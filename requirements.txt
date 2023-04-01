@@ -47,4 +47,3 @@ tzdata==2022.7
 uritemplate==4.1.1
 urllib3==1.26.13
 zope.interface==6.0
-_sqlite3==3.0.2
