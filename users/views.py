@@ -31,7 +31,6 @@ class CreateUser (generics.ListCreateAPIView):
             try:
                 user_data = user.objects.all()
                 serializer=UserSerializer(user_data,many=True)
-                print(serializer.data)
                 return Response({"data":serializer.data,"status ": status.HTTP_201_CREATED})
             except user.DoesNotExist:
                 return Response({"data":"table not exists","status ": status.HTTP_401_UNAUTHORIZED})
