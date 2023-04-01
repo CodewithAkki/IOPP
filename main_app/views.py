@@ -7,15 +7,15 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 class login(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        user=user.objects.get(email=request.data['email'])
-        if user.check_password(request.data['password']) :
-            token,t=Token.objects.get_or_create(user=user)
+        user_data=user.objects.get(email=request.data['email'])
+        if user_data.check_password(request.data['password']) :
+            token,t=Token.objects.get_or_create(user=user_data)
             print(t,token)
             return Response({
             "message":'login successfully',
             'token': token.key,
-            'userId': user.pk,
-            'email': user.email
+            'userId': user_data.pk,
+            'email': user_data.email
             })
         else:
             return Response({
