@@ -77,9 +77,9 @@ class Group (models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
     name = models.CharField(max_length=200,blank=False,null=True)
     role = models.CharField(max_length=200,blank=False,null=True)
-    student = models.ForeignKey(user,on_delete=CASCADE)
+    student = models.ForeignKey(user,on_delete=CASCADE,related_name="student")
     project = models.ForeignKey(Project,on_delete=CASCADE)
-    guid = models.ForeignKey(user,on_delete=CASCADE)
+    guid = models.ForeignKey(user,on_delete=CASCADE,related_name="guid")
 
     def __str__(self):
         return self.name
