@@ -40,7 +40,8 @@ class Project (models.Model):
     patent_info=models.CharField(max_length=500,default=" ",null=True,blank=True)
     start_date = models.DateTimeField(auto_now=True)
     end_date = models.DateField()
-    goal =models.ForeignKey(Goal,on_delete=CASCADE)
+    Storage_link = models.URLField(null=True,blank=True)
+    type=models.CharField(max_length=10 , default='public')
     domain = models.ForeignKey(Domain,null=True,blank=False,on_delete=CASCADE)
     description = models.TextField()
 
@@ -93,4 +94,3 @@ class Approval (models.Model):
     status = models.CharField(max_length=7) 
     def __str__(self):
         return self.project
-

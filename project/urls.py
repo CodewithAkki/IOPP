@@ -8,7 +8,7 @@ urlpatterns = [
     path('Goal/',CreateListGoal.as_view()),
     path('Group/',CreateListGroup.as_view()),
     path('Repository/',CreateListRepository.as_view()),
-    path('Project/',CreateProject.as_view()),
+    path('',CreateProject.as_view()),
     path('Mailstone/',CreateMailestone.as_view()),
 
     path('Approval/<uuid:pk>',UpdateDeleteRetriveApproval.as_view()),
@@ -16,6 +16,6 @@ urlpatterns = [
     path('Domain/<uuid:pk>',UpdateDeleteRetriveDomain.as_view()),
     path('Group/<uuid:pk>',UpdateDeleteRetriveGroup.as_view()),
     path('Mailstone/<uuid:pk>',UpdateDeleteRetriveMailestone.as_view()),
-    path('Project/<uuid:pk>',UpdateDeleteRetriveProject.as_view()),
+    path('<uuid:pk>/',UpdateDeleteRetriveProject.as_view()),
     
 ]
