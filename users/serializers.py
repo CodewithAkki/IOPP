@@ -1,11 +1,11 @@
-from .models import user
+from .models import user,role
 from rest_framework import serializers
 
 class UserSerializer (serializers.ModelSerializer):
      class Meta:
         model = user
         fields = [
-            
+            'id',
             'first_name',
             'last_name',
             'college',
@@ -22,5 +22,10 @@ class UserSerializer (serializers.ModelSerializer):
             'is_dean',
             'is_hod',
             'profilePic',
-            
+            'is_student'
             ]
+        
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = role
+        fields='__all__'

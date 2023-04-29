@@ -11,9 +11,23 @@ from rest_framework.authtoken.models import Token
 from .managers import CustomUserManager
 
 from django.db.models.deletion import CASCADE
+
+class role(models.Model):
+    id=models.AutoField(primary_key=True)
+    is_student=models.BooleanField(default=False)
+    is_teacher=models.BooleanField(default=False)
+    is_guid=models.BooleanField(default=False)
+    is_AICTEmember=models.BooleanField(default=False)
+    is_dean=models.BooleanField(default=False)
+    is_hod=models.BooleanField(default=False)
+    user=models.ForeignKey(user,on_delete=CASCADE)
+
+
+
 class user (AbstractUser):
     #username = models.CharField(max_length=200,unique=True)
     username = None
+    id=models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=200,null=True,default=" ")
     last_name = models.CharField(max_length=200,null=True,default=" ")
     college =models.CharField(max_length=200,null=True,default=" ")
@@ -23,6 +37,7 @@ class user (AbstractUser):
     address=models.CharField(max_length=200,null=True,default=" ")
     birthdate=models.DateField(null=True,default=None)
     email =models.EmailField(_('email address'),unique=True)
+    is_student=models.BooleanField(default=False)
     is_teacher=models.BooleanField(default=False)
     is_guid=models.BooleanField(default=False)
     is_AICTEmember=models.BooleanField(default=False)
