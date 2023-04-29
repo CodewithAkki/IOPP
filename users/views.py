@@ -43,7 +43,7 @@ class UpdateDeleteRetrive(generics.RetrieveUpdateDestroyAPIView):
         queryset = user.objects.all()
         serializer_class = UserSerializer
         filter_backends = [filters.SearchFilter]
-        search_fields = ['=email']
+        search_fields = ['^email']
 
         def patch(self, request, *args, **kwargs):
             user_data= user.objects.get(email=kwargs["pk"])
