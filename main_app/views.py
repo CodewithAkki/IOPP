@@ -17,7 +17,12 @@ class login(ObtainAuthToken):
                     "message":'login successfully',
                     'token': token.key,
                     'userId': user_data.pk,
-                    'email': user_data.email
+                    'email': user_data.email,
+                    'is_teacher':user_data.is_teacher,
+                    'is_guid':user_data.is_guid,
+                    'is_AICTEmember':user_data.is_AICTEmember,
+                    'is_dean':user_data.is_dean,
+                    'is_hod':user_data.is_hod
                     })
                 else:
                      return Response({

@@ -5,6 +5,8 @@ from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
 # Create your views here.
 class CreateListGoal(generics.ListCreateAPIView):
     queryset=Goal.objects.all()
@@ -53,7 +55,19 @@ class UpdateDeleteRetriveGroup(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=GroupSerializer
     filter_backends=[filters.SearchFilter]
     search_fields=['=id']
-
+class SearchDeleteGroup(generics.ListAPIView , generics.DestroyAPIView):
+    queryset=Group.objects.all()
+    serializer_class=GroupSerializer
+    def get(self, request, *args, **kwargs):
+        group=Group.objects.filter(name=kwargs['name'])
+        print(group)
+        serializer=GroupSerializer(group,many=True)
+        return Response({'data':serializer.data,'status':status.HTTP_200_OK})
+    
+    def delete(self, request, *args, **kwargs):
+        group=Group.objects.filter(name=args['name'])
+        group.delete()
+        return Response({'data':'deleted','status':status.HTTP_200_OK})
 class UpdateDeleteRetriveDomain(generics.RetrieveUpdateDestroyAPIView):
     queryset=Domain.objects.all()
     serializer_class=DomainstoneSerializer

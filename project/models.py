@@ -78,10 +78,12 @@ class Group (models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
     name = models.CharField(max_length=200,blank=False,null=True)
     role = models.CharField(max_length=200,blank=False,null=True)
-    student = models.ForeignKey(user,on_delete=CASCADE,related_name="student")
+    student = models.ForeignKey(user,on_delete=CASCADE)
     project = models.ForeignKey(Project,on_delete=CASCADE)
-    guid = models.ForeignKey(user,on_delete=CASCADE,related_name="guid")
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name','student','project'], name='Unique_entries')
+        ]
     def __str__(self):
         return self.name
 
