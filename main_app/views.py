@@ -5,6 +5,7 @@ from rest_framework import status
 from users.models import user
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from users.models import role
 class login(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         try:
@@ -13,16 +14,13 @@ class login(ObtainAuthToken):
                 if user_data.check_password(request.data['password']) :
                     token,t=Token.objects.get_or_create(user=user_data)
                     print(t,token)
+                    userRole=role.objects.get(id=user_data.role)
                     return Response({
                     "message":'login successfully',
                     'token': token.key,
                     'userId': user_data.pk,
                     'email': user_data.email,
-                    'is_teacher':user_data.is_teacher,
-                    'is_guid':user_data.is_guid,
-                    'is_AICTEmember':user_data.is_AICTEmember,
-                    'is_dean':user_data.is_dean,
-                    'is_hod':user_data.is_hod
+                    'role':userRole.name
                     })
                 else:
                      return Response({
