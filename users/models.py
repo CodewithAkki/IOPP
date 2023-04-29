@@ -12,15 +12,6 @@ from .managers import CustomUserManager
 
 from django.db.models.deletion import CASCADE
 
-class role(models.Model):
-    id=models.AutoField(primary_key=True)
-    is_student=models.BooleanField(default=False)
-    is_teacher=models.BooleanField(default=False)
-    is_guid=models.BooleanField(default=False)
-    is_AICTEmember=models.BooleanField(default=False)
-    is_dean=models.BooleanField(default=False)
-    is_hod=models.BooleanField(default=False)
-    user=models.ForeignKey(user,on_delete=CASCADE)
 
 
 
@@ -56,3 +47,13 @@ def create_auth_token(sender,instance = None,created=False,**kwargs):
         token = Token.objects.create(user=instance)
         print('Token:- ', token.key)
 
+
+class role(models.Model):
+    id=models.AutoField(primary_key=True)
+    is_student=models.BooleanField(default=False)
+    is_teacher=models.BooleanField(default=False)
+    is_guid=models.BooleanField(default=False)
+    is_AICTEmember=models.BooleanField(default=False)
+    is_dean=models.BooleanField(default=False)
+    is_hod=models.BooleanField(default=False)
+    user=models.ForeignKey(user,on_delete=CASCADE)
