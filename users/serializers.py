@@ -16,13 +16,9 @@ class UserSerializer (serializers.ModelSerializer):
             'birthdate',
             'email',
             'password',
-            'is_teacher',
-            'is_guid',
-            'is_AICTEmember',
-            'is_dean',
-            'is_hod',
+            'role',
             'profilePic',
-            'is_student'
+           
             ]
         
 class RoleSerializer(serializers.ModelSerializer):

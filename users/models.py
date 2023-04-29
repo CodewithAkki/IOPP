@@ -14,7 +14,10 @@ from django.db.models.deletion import CASCADE
 
 
 
-
+class role(models.Model):
+    id=models.AutoField(primary_key=True)
+    name=models.CharField(max_length=200)
+    
 class user (AbstractUser):
     #username = models.CharField(max_length=200,unique=True)
     username = None
@@ -28,12 +31,7 @@ class user (AbstractUser):
     address=models.CharField(max_length=200,null=True,default=" ")
     birthdate=models.DateField(null=True,default=None)
     email =models.EmailField(_('email address'),unique=True)
-    is_student=models.BooleanField(default=False)
-    is_teacher=models.BooleanField(default=False)
-    is_guid=models.BooleanField(default=False)
-    is_AICTEmember=models.BooleanField(default=False)
-    is_dean=models.BooleanField(default=False)
-    is_hod=models.BooleanField(default=False)
+    role=models.ForeignKey(role,on_delete=CASCADE)
     profilePic = models.URLField(max_length=200,default='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png')
     registerDate = models.DateField(auto_now=True)
     USERNAME_FIELD = 'email'
@@ -48,12 +46,5 @@ def create_auth_token(sender,instance = None,created=False,**kwargs):
         print('Token:- ', token.key)
 
 
-class role(models.Model):
-    id=models.AutoField(primary_key=True)
-    is_student=models.BooleanField(default=False)
-    is_teacher=models.BooleanField(default=False)
-    is_guid=models.BooleanField(default=False)
-    is_AICTEmember=models.BooleanField(default=False)
-    is_dean=models.BooleanField(default=False)
-    is_hod=models.BooleanField(default=False)
-    user=models.ForeignKey(user,on_delete=CASCADE)
+
+    

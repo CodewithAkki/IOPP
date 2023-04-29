@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import user,role
-from .serializers import UserSerializer
+from .serializers import UserSerializer,RoleSerializer
 from rest_framework import generics
 from django_genericfilters.views import FilteredListView
 from rest_framework.authentication import TokenAuthentication
@@ -57,18 +57,19 @@ class seachThroughRole(generics.ListAPIView):
         serializer_class = UserSerializer
         def get(self, request, *args, **kwargs):
             if str(kwargs['role']).capitalize() == "Teacher":
-                queryset = user.objects.filter(is_teacher=True,is_guid=False,is_AICTEmember=False,is_dean=False,is_hod=False,is_student=False)
+                queryset = role.objects.filter(name="Teacher")
             elif str(kwargs['role']).capitalize()== "Guid":
-                queryset = user.objects.filter(is_guid=True,is_teacher=False,is_AICTEmember=False,is_dean=False,is_hod=False,is_student=False)
+                queryset = role.objects.filter(name="Guid")
             elif str(kwargs['role']).capitalize() == "Hod":
-                queryset = user.objects.filter(is_AICTEmember=False,is_teacher=False,is_guid=False,is_dean=False,is_hod=True,is_student=False)
+                queryset = role.objects.filter(name="Hod")
             elif str(kwargs['role']).capitalize() == "Dean":
-                queryset = user.objects.filter(is_dean=True,is_teacher=False,is_guid=False,is_AICTEmember=False,is_hod=False,is_student=False)
-            elif str(kwargs['role']).capitalize() == "Aictemember":
-                queryset = user.objects.filter(is_hod=False,is_teacher=False,is_guid=False,is_AICTEmember=True,is_dean=False,is_student=False)
+                queryset = role.objects.filter(name="Dean")
+            elif str(kwargs['role']).capitalize() == "Aicte member":
+                queryset = role.objects.filter(name="AICTE member")
             elif str(kwargs['role']).capitalize() == "Student":
-                queryset = user.objects.filter(is_student=True,is_teacher=False,is_guid=False,is_AICTEmember=False,is_dean=False,is_hod=False)
-            serializer=UserSerializer(queryset,many=True)
+                queryset = role.objects.filter(name="Student")
+            user_data=user.objects.filter(role=queryset)
+            serializer=UserSerializer(user_data,many=True)
             return Response({'data':serializer.data,'status':status.HTTP_200_OK}) 
             
 class deleteAll(generics.DestroyAPIView):
@@ -80,11 +81,11 @@ class deleteAll(generics.DestroyAPIView):
            return Response({'status':status.HTTP_200_OK})
 class RoleInfo(generics.ListCreateAPIView):
      queryset=role.objects.all()
-     serializer_class=UserSerializer
+     serializer_class=RoleSerializer
 
 class RoleDetails(generics.RetrieveUpdateDestroyAPIView):
         queryset=role.objects.all()
-        serializer_class=UserSerializer
-        serializer_class = UserSerializer
+        serializer_class = RoleSerializer
         filter_backends = [filters.SearchFilter]
-        search_fields = ['=id']
+        search_fields = ['=name']
+
