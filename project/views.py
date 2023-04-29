@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Goal,Milestone,Domain,Project,Repository,Group,Approval
+from .models import Goal,Milestone,Domain,Project,Repository,Group,Approve
 from .serializers import GoalSerializer,DomainstoneSerializer,ProjectSerializer,RepositorySerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
@@ -27,7 +27,7 @@ class CreateListRepository(generics.ListCreateAPIView):
     serializer_class=RepositorySerializer
 
 class CreateListApprove(generics.ListCreateAPIView):
-    queryset=Approval.objects.all()
+    queryset=Approve.objects.all()
     serializer_class=ApprovalSerializer
 
 class CreateListDomain(generics.ListCreateAPIView):
@@ -76,7 +76,7 @@ class UpdateDeleteRetriveRepository(generics.RetrieveUpdateDestroyAPIView):
 
 class UpdateDeleteRetriveApproval(generics.RetrieveUpdateDestroyAPIView):
    
-    queryset=Approval.objects.all()
+    queryset=Approve.objects.all()
     serializer_class=ApprovalSerializer
     filter_backends=[filters.SearchFilter]
     search_fields=['=id']

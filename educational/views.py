@@ -8,12 +8,10 @@ from rest_framework.authentication import TokenAuthentication
 # Create your views here.
 
 class CreatecCollege(generics.ListCreateAPIView):
-    
     queryset = college.objects.all()
     serializer_class = collegeSerializer
 
 class UpdateDeleteRetriveCollege(generics.RetrieveUpdateDestroyAPIView):
-   
     queryset = college.objects.all()
     serializer_class = collegeSerializer
     filter_backends = [filters.SearchFilter]
@@ -25,7 +23,6 @@ class CreatecUniversity(generics.ListCreateAPIView):
     serializer_class = universitySerializer
 
 class UpdateDeleteRetriveUniversity(generics.RetrieveUpdateDestroyAPIView):
-   
     queryset = University.objects.all()
     serializer_class = universitySerializer
     filter_backends = [filters.SearchFilter]

@@ -85,12 +85,3 @@ class Group (models.Model):
     def __str__(self):
         return self.name
 
-class Approval (models.Model):
-    id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
-    guid = models.ForeignKey(user,on_delete=CASCADE)
-    group =models.ForeignKey(Group,on_delete=CASCADE) 
-    project = models.ForeignKey(Project,on_delete=CASCADE)
-    feedback = models.TextField()
-    status = models.CharField(max_length=7) 
-    def __str__(self):
-        return self.project
