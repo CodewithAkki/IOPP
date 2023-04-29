@@ -65,9 +65,10 @@ class SearchDeleteGroup(generics.ListAPIView , generics.DestroyAPIView):
         return Response({'data':serializer.data,'status':status.HTTP_200_OK})
     
     def delete(self, request, *args, **kwargs):
-        group=Group.objects.filter(name=args['name'])
+        group=Group.objects.filter(name=kwargs['name'])
         group.delete()
         return Response({'data':'deleted','status':status.HTTP_200_OK})
+
 class UpdateDeleteRetriveDomain(generics.RetrieveUpdateDestroyAPIView):
     queryset=Domain.objects.all()
     serializer_class=DomainstoneSerializer
