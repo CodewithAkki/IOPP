@@ -44,7 +44,7 @@ class Project (models.Model):
     type=models.CharField(max_length=10 , default='public')
     domain = models.ForeignKey(Domain,null=True,blank=False,on_delete=CASCADE)
     description = models.TextField()
-
+    user
     def __str__(self):
         return self.name
 

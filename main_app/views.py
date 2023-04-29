@@ -14,7 +14,8 @@ class login(ObtainAuthToken):
                 if user_data.check_password(request.data['password']) :
                     token,t=Token.objects.get_or_create(user=user_data)
                     print(t,token)
-                    userRole=role.objects.get(id=user_data.role)
+                    print(user_data.role.id)
+                    userRole=role.objects.get(id=user_data.role.id)
                     return Response({
                     "message":'login successfully',
                     'token': token.key,
