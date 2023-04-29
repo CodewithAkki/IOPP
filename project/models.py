@@ -73,7 +73,17 @@ class Repository(models.Model):
 
     def __str__(self):
         return self.name
-
+class Assignment(models.Model):
+    id = models.UUIDField(primary_key=True,editable=False,default=uuid4)
+    guid=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='guid')
+    teacher=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='teacher')
+    hod=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='hod')
+    dean=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='dean')
+    AicteMember=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='AicteMember')
+    project = models.ForeignKey(Project,null=True,blank=False,on_delete=CASCADE)
+    def __str__(self):
+        return self.id
+    
 class Group (models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
     name = models.CharField(max_length=200,blank=False,null=True)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Goal,Milestone,Domain,Project,Repository,Group,Approve
+from .models import Goal,Milestone,Assignment,Domain,Project,Repository,Group,Approve
 
 class GoalSerializer (serializers.ModelSerializer):
     class Meta:
@@ -35,3 +35,7 @@ class GroupSerializer (serializers.ModelSerializer):
         model=Group
         fields = '__all__'
 
+class AssignmentSerializer (serializers.ModelSerializer):
+    class Meta:
+        model=Assignment
+        fields = '__all__'

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import CreateMailestone,CreateListApprove,CreateListDomain,CreateListGoal,CreateListGroup,CreateListRepository,CreateProject
-from .views import UpdateDeleteRetriveMailestone,SearchDeleteGroup,UpdateDeleteRetriveApproval,UpdateDeleteRetriveDomain,UpdateDeleteRetriveGoal,UpdateDeleteRetriveGroup,UpdateDeleteRetriveProject,UpdateDeleteRetriveRepository
+from .views import AssignmentGuidsDetail,AssignmentGuidsUpdate,UpdateDeleteRetriveMailestone,SearchDeleteGroup,UpdateDeleteRetriveApproval,UpdateDeleteRetriveDomain,UpdateDeleteRetriveGoal,UpdateDeleteRetriveGroup,UpdateDeleteRetriveProject,UpdateDeleteRetriveRepository
 urlpatterns = [
     
     path('Approve/',CreateListApprove.as_view()),
@@ -10,6 +10,8 @@ urlpatterns = [
     path('Repository/',CreateListRepository.as_view()),
     path('',CreateProject.as_view()),
     path('Mailstone/',CreateMailestone.as_view()),
+    path('Assignment',AssignmentGuidsDetail.as_view()),
+    path('Assignment/<int:pk>',AssignmentGuidsUpdate.as_view()),
 
     path('Approval/<uuid:pk>',UpdateDeleteRetriveApproval.as_view()),
     path('group/<str:name>',SearchDeleteGroup.as_view()),

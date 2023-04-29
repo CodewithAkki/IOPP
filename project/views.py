@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Goal,Milestone,Domain,Project,Repository,Group,Approve
-from .serializers import GoalSerializer,DomainstoneSerializer,ProjectSerializer,RepositorySerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
+from .models import Goal,Milestone,Domain,Project,Repository,Group,Approve,Assignment
+from .serializers import AssignmentSerializer,GoalSerializer,DomainstoneSerializer,ProjectSerializer,RepositorySerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -68,6 +68,16 @@ class SearchDeleteGroup(generics.ListAPIView , generics.DestroyAPIView):
         group=Group.objects.filter(name=kwargs['name'])
         group.delete()
         return Response({'data':'deleted','status':status.HTTP_200_OK})
+
+class AssignmentGuidsDetail(generics.ListCreateAPIView):
+    queryset=Assignment.objects.all()
+    serializer_class=AssignmentSerializer
+
+class AssignmentGuidsUpdate(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Assignment.objects.all()
+    serializer_class=AssignmentSerializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['=pk']
 
 class UpdateDeleteRetriveDomain(generics.RetrieveUpdateDestroyAPIView):
     queryset=Domain.objects.all()
