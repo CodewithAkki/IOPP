@@ -68,9 +68,13 @@ class seachThroughRole(generics.ListAPIView):
                 queryset = role.objects.filter(name="AICTE member")
             elif str(kwargs['role']).capitalize() == "Student":
                 queryset = role.objects.filter(name="Student")
-            user_data=user.objects.filter(role=queryset)
-            serializer=UserSerializer(user_data,many=True)
-            return Response({'data':serializer.data,'status':status.HTTP_200_OK}) 
+            listUserData=list()
+            for objs in queryset:
+                user_data=user.objects.filter(role=objs)
+                serializer=UserSerializer(user_data,many=True)
+                
+                listUserData.extend(serializer.data)
+            return Response(listUserData,status=status.HTTP_200_OK) 
             
 class deleteAll(generics.DestroyAPIView):
      queryset=user.objects.all()

@@ -15,13 +15,19 @@ class login(ObtainAuthToken):
                     token,t=Token.objects.get_or_create(user=user_data)
                     print(t,token)
                     print(user_data.role.id)
+                    print(user_data.profilePic)
                     userRole=role.objects.get(id=user_data.role.id)
+
                     return Response({
                     "message":'login successfully',
                     'token': token.key,
                     'userId': user_data.pk,
                     'email': user_data.email,
-                    'role':userRole.name
+                    'role':userRole.name,
+                    'first_name':user_data.first_name,
+                    'last_name':user_data.last_name,
+                    'college':user_data.college,
+                    'picture':user_data.profilePic
                     })
                 else:
                      return Response({

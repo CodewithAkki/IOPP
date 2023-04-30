@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+from users.models import role
 # Create your views here.
 class CreateListGoal(generics.ListCreateAPIView):
     queryset=Goal.objects.all()
@@ -106,3 +107,33 @@ class UpdateDeleteRetriveApproval(generics.RetrieveUpdateDestroyAPIView):
     filter_backends=[filters.SearchFilter]
     search_fields=['=id']
 
+class AssignedProjects(generics.ListAPIView):
+    queryset=Assignment.objects.all()
+    serializer_class=AssignmentSerializer
+
+    def get(self, request, *args, **kwargs):
+        name=kwargs['role']
+        if str(name).capitalize() == "Guid":
+            assignment=Assignment.objects.get(guid=4)
+        elif str(name).capitalize() == "Teacher":
+            assignment=Assignment.objects.get(teacher=kwargs['id_role'])
+        elif str(name).capitalize() == "Hod":
+            assignment=Assignment.objects.get(hod=kwargs['id_role'])
+        elif str(name).capitalize() == "Dean":
+            assignment=Assignment.objects.get(dean=kwargs['id_role'])
+        elif str(name).capitalize() == "Aictemember":
+            assignment=Assignment.objects.get(AicteMember=kwargs['id_role'])
+        elif str(name).capitalize() == "Student":
+            Project.object.filter()
+        data=Project.objects.filter(id=assignment.project.id)
+        serializer=ProjectSerializer(data,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class searchByproject(generics.ListAPIView):
+    queryset=Approve.objects.all()
+    serializer_class=ApprovalSerializer
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['project'])
+        approve=Approve.objects.get(project=project)
+        serializer=ApprovalSerializer(approve,data=request.data,partial=True)
+        return Response(serializer.data)

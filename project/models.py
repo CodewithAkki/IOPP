@@ -44,6 +44,8 @@ class Project (models.Model):
     type=models.CharField(max_length=10 , default='public')
     domain = models.ForeignKey(Domain,null=True,blank=False,on_delete=CASCADE)
     description = models.TextField()
+    user = models.ForeignKey(user,on_delete=CASCADE)
+    
     user
     def __str__(self):
         return self.name
@@ -55,11 +57,13 @@ class Approve(models.Model):
     is_aicte_approved= models.BooleanField(default=False)
     is_hod_approved= models.BooleanField(default=False)
     is_dean_approved= models.BooleanField(default=False)
+    is_teacher_approved=models.BooleanField(default=False)
     project=models.ForeignKey(Project,on_delete=CASCADE)
     description_guid=models.CharField(max_length=1000,null=True,blank=False)
     description_hod=models.CharField(max_length=1000,null=True,blank=False)
     description_dean=models.CharField(max_length=1000,null=True,blank=False)
     description_aicte=models.CharField(max_length=1000,null=True,blank=False)
+    description_teacher=models.CharField(max_length=1000,null=True,blank=False)
 
     def __str__(self):
         return self.project
@@ -81,8 +85,7 @@ class Assignment(models.Model):
     dean=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='dean')
     AicteMember=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='AicteMember')
     project = models.ForeignKey(Project,null=True,blank=False,on_delete=CASCADE)
-    def __str__(self):
-        return self.id
+
     
 class Group (models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
