@@ -85,7 +85,10 @@ class Assignment(models.Model):
     dean=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='dean')
     AicteMember=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='AicteMember')
     project = models.ForeignKey(Project,null=True,blank=False,on_delete=CASCADE)
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['guid','teacher','hod','dean','AicteMember','project'], name='Unique_entries_assigned')
+        ]
     
 class Group (models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
@@ -93,10 +96,7 @@ class Group (models.Model):
     role = models.CharField(max_length=200,blank=False,null=True)
     student = models.ForeignKey(user,on_delete=CASCADE)
     project = models.ForeignKey(Project,on_delete=CASCADE)
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['name','student','project'], name='Unique_entries')
-        ]
+
     def __str__(self):
         return self.name
 
