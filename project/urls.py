@@ -11,7 +11,7 @@ urlpatterns = [
     path('',CreateProject.as_view()),
     path('Mailstone/',CreateMailestone.as_view()),
     path('Assignment',AssignmentGuidsDetail.as_view()),
-    path('Assignment/<int:pk>',AssignmentGuidsUpdate.as_view()),
+    path('Assignment/<int:id>/',AssignmentGuidsUpdate.as_view()),
     path('Approve/<uuid:collect_projects>',searchByproject.as_view()),
     path('Approval/<uuid:pk>',UpdateDeleteRetriveApproval.as_view()),
     path('group/<str:name>',SearchDeleteGroup.as_view()),

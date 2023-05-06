@@ -78,7 +78,7 @@ class AssignmentGuidsUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset=Assignment.objects.all()
     serializer_class=AssignmentSerializer
     filter_backends=[filters.SearchFilter]
-    search_fields=['=pk']
+    search_fields=['=id']
 
 class UpdateDeleteRetriveDomain(generics.RetrieveUpdateDestroyAPIView):
     queryset=Domain.objects.all()
@@ -114,7 +114,7 @@ class AssignedProjects(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         name=kwargs['role']
         if str(name).capitalize() == "Guid":
-            assignment=Assignment.objects.get(guid=4)
+            assignment=Assignment.objects.get(guid=kwargs['id_role'])
         elif str(name).capitalize() == "Teacher":
             assignment=Assignment.objects.get(teacher=kwargs['id_role'])
         elif str(name).capitalize() == "Hod":
