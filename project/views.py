@@ -8,6 +8,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from users.models import role
+from users.models import user
+
 
 # Create your views here.
 class CreateListGoal(generics.ListCreateAPIView):
@@ -21,6 +23,19 @@ class CreateMailestone(generics.ListCreateAPIView):
 class CreateListGroup(generics.ListCreateAPIView):
     queryset=Group.objects.all()
     serializer_class=GroupSerializer
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        leader=user.objects.get(email=request.data['leader'])
+        user1=user.objects.get(email=request.data['user1'])
+        user2=user.objects.get(email=request.data['user2'])
+        user3=user.objects.get(email=request.data['user3'])
+        user4=user.objects.get(email=request.data['user4'])
+        project=Project.objects.get(id=request.data['project'])
+        Group.objects.create(leader=leader,user1=user1,user2=user2,user3=user3,user4=user4,project=project)
+        if Group.objects.get(project=project):
+            return Response({"message":"group created","status":status.HTTP_200_OK})
+        else:
+            return Response({"message":"fail to register","status":status.HTTP_200_OK})
 
 class CreateProject(generics.ListCreateAPIView):
     queryset=Project.objects.all()
@@ -53,16 +68,35 @@ class UpdateDeleteRetriveMailestone(generics.RetrieveUpdateDestroyAPIView):
 class UpdateDeleteRetriveGroup(generics.RetrieveUpdateDestroyAPIView):
     queryset=Group.objects.all()
     serializer_class=GroupSerializer
-    filter_backends=[filters.SearchFilter]
-    search_fields=['=id']
-class SearchDeleteGroup(generics.ListAPIView , generics.DestroyAPIView):
-    queryset=Group.objects.all()
-    serializer_class=GroupSerializer
     def get(self, request, *args, **kwargs):
-        group=Group.objects.filter(name=kwargs['name'])
-        print(group)
-        serializer=GroupSerializer(group,many=True)
-        return Response({'data':serializer.data,'status':status.HTTP_200_OK})
+        try:
+            import json
+            group=Group.objects.get(project=kwargs['project'])
+            seriaizer=GroupSerializer(group)
+            data=seriaizer.data
+            collect=dict()
+            collect['leader']=user.objects.get(id=data['leader']).email
+            collect['user1']=user.objects.get(id=data['user1']).email
+            collect['user2']=user.objects.get(id=data['user2']).email
+            collect['user3']=user.objects.get(id=data['user3']).email
+            collect['user4']=user.objects.get(id=data['user4']).email
+            
+            
+            print(collect)
+            seri=json.loads(json.dumps(collect,indent = 7))
+
+            return Response(seri,status=status.HTTP_200_OK)
+        except Group.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self, request, *args, **kwargs):
+        try:
+            group=Group.objects.get(kwargs['project'])
+            seriaizer=GroupSerializer(group,data=request.data,partial=True)
+            return Response(seriaizer.data,status=status.HTTP_200_OK)
+        except Group.DoesNotExist:
+            return Response({"data": "does not exists","status":status.HTTP_400_BAD_REQUEST})
+
     
     def delete(self, request, *args, **kwargs):
         group=Group.objects.filter(name=kwargs['name'])
@@ -116,15 +150,13 @@ class AssignedProjects(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         name=kwargs['role']
         if str(name).capitalize() == "Guid":
-            assignment=Assignment.objects.get(guid=kwargs['id_role'])
-        elif str(name).capitalize() == "Teacher":
-            assignment=Assignment.objects.get(teacher=kwargs['id_role'])
+            assignment=Assignment.objects.get(guid=kwargs['userid'])
         elif str(name).capitalize() == "Hod":
-            assignment=Assignment.objects.get(hod=kwargs['id_role'])
+            assignment=Assignment.objects.get(hod=kwargs['userid'])
         elif str(name).capitalize() == "Dean":
-            assignment=Assignment.objects.get(dean=kwargs['id_role'])
+            assignment=Assignment.objects.get(dean=kwargs['userid'])
         elif str(name).capitalize() == "Aicte member":
-            assignment=Assignment.objects.get(AicteMember=kwargs['id_role'])
+            assignment=Assignment.objects.get(AicteMember=kwargs['userid'])
         elif str(name).capitalize() == "Student":
             Project.object.filter()
         data=Project.objects.filter(id=assignment.project.id)

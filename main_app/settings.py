@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'channels',
     'project',
     'events',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
