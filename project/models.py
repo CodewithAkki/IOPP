@@ -1,7 +1,7 @@
 from django.db import models
 from uuid import uuid4
 from django.db.models.deletion import CASCADE
-from users.models import user as user
+from users.models import user 
 # Create your models here.
 class Goal(models.Model):
     id = models.UUIDField(primary_key=True, editable=False,default=uuid4)
@@ -32,6 +32,9 @@ class Domain (models.Model):
     description=models.TextField()
 
 
+class GroupName(models.Model):
+    id=models.AutoField(primary_key=True)
+    name=models.CharField(max_length=200,blank=False,null=True,unique=True)
 
 class Project (models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
@@ -44,12 +47,43 @@ class Project (models.Model):
     type=models.CharField(max_length=10 , default='public')
     domain = models.ForeignKey(Domain,null=True,blank=False,on_delete=CASCADE)
     description = models.TextField()
-    user = models.ForeignKey(user,on_delete=CASCADE)
-    
-    user
-    def __str__(self):
-        return self.name
+    #leader = models.ForeignKey(user,on_delete=CASCADE,related_name="group_leader")
+    #user1 = models.ForeignKey(user,on_delete=CASCADE,null=True,blank=True,related_name="group_user1")
+    #user2 = models.ForeignKey(user,on_delete=CASCADE,null=True,blank=True,related_name="group_user2")
+    #user3 = models.ForeignKey(user,on_delete=CASCADE,null=True,blank=True,related_name="group_user3")
+    #user4 = models.ForeignKey(user,on_delete=CASCADE,null=True,blank=True,related_name="group_user4")
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name','user'], name='Unique_entries_project')
+        ]
 
+class Group (models.Model):
+    id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
+    #user1 = models.ForeignKey(user,on_delete=CASCADE,related_name="group_user1",null=True,blank=True)
+    #user2 = models.ForeignKey(user,on_delete=CASCADE,related_name="group_user2",null=True,blank=True)
+    #user3 = models.ForeignKey(user,on_delete=CASCADE,related_name="group_user3",null=True,blank=True)
+    #user4 = models.ForeignKey(user,on_delete=CASCADE,related_name="group_user4",null=True,blank=True)
+    #user5 = models.ForeignKey(user,on_delete=CASCADE,related_name="group_user5",null=True,blank=True)
+    #user_project=models.ForeignKey(Project,on_delete=CASCADE , related_name="participent_project")
+    
+
+
+
+   
+
+
+class Assignment(models.Model):
+    id = models.UUIDField(primary_key=True,editable=False,default=uuid4)
+    guid=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='guid')
+    teacher=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='teacher')
+    hod=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='hod')
+    dean=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='dean')
+    AicteMember=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='AicteMember')
+    project = models.ForeignKey(Project,null=True,blank=False,on_delete=CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['guid','teacher','hod','dean','AicteMember','project'], name='Unique_entries_assigned')
+        ]
 
 class Approve(models.Model):
     id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
@@ -67,36 +101,3 @@ class Approve(models.Model):
 
     def __str__(self):
         return self.project
-    
-class Repository(models.Model):
-    id = models.UUIDField(primary_key=True,editable=False,default=uuid4)
-    name=models.CharField(max_length=200,null=True,blank=False)
-    project=models.OneToOneField(Project,on_delete=CASCADE)
-    Storage_link = models.URLField(null=True,blank=True)
-    type=models.CharField(max_length=10 , default='public')
-
-    def __str__(self):
-        return self.name
-class Assignment(models.Model):
-    id = models.UUIDField(primary_key=True,editable=False,default=uuid4)
-    guid=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='guid')
-    teacher=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='teacher')
-    hod=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='hod')
-    dean=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='dean')
-    AicteMember=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='AicteMember')
-    project = models.ForeignKey(Project,null=True,blank=False,on_delete=CASCADE)
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['guid','teacher','hod','dean','AicteMember','project'], name='Unique_entries_assigned')
-        ]
-    
-class Group (models.Model):
-    id= models.UUIDField(primary_key=True,editable=False,default=uuid4)
-    name = models.CharField(max_length=200,blank=False,null=True)
-    role = models.CharField(max_length=200,blank=False,null=True)
-    student = models.ForeignKey(user,on_delete=CASCADE)
-    project = models.ForeignKey(Project,on_delete=CASCADE)
-
-    def __str__(self):
-        return self.name
-

@@ -11,6 +11,7 @@ class login(ObtainAuthToken):
         try:
             user_data=user.objects.get(email=request.data['username'])
             if user_data:
+                print(request.data['password'])
                 if user_data.check_password(request.data['password']) :
                     token,t=Token.objects.get_or_create(user=user_data)
                     print(t,token)
@@ -27,7 +28,11 @@ class login(ObtainAuthToken):
                     'first_name':user_data.first_name,
                     'last_name':user_data.last_name,
                     'college':user_data.college,
-                    'picture':user_data.profilePic
+                    'phone_no':user_data.phone_no,
+                    'picture':user_data.profilePic,
+                    'university':user_data.university,
+                    'department':user_data.department,
+                    'address':user_data.address
                     })
                 else:
                      return Response({

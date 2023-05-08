@@ -26,7 +26,7 @@ class user (AbstractUser):
     last_name = models.CharField(max_length=200,null=True,default=" ")
     college =models.CharField(max_length=200,null=True,default=" ")
     department=models.CharField(max_length=200,null=True,default=" ",blank=True)
-    designation= models.CharField(max_length=200,default=" ",null=True,blank=True)
+    university= models.CharField(max_length=200,default=" ",null=True,blank=True)
     phone_no = models.CharField(max_length=15,null=True,default=None)
     address=models.CharField(max_length=200,null=True,default=" ")
     birthdate=models.DateField(null=True,default=None)

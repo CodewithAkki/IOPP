@@ -23,6 +23,7 @@ class CreateUser (generics.ListCreateAPIView):
             user_data.save()
             print(request.data['email'])
             user_object = user.objects.get(email=request.data['email'])
+            print(request.data['password'])
             user_object.set_password(request.data['password'])
             user_object.save()
             serializer=UserSerializer(user_object)
@@ -51,7 +52,22 @@ class UpdateDeleteRetrive(generics.RetrieveUpdateDestroyAPIView):
             user_data.save()
             serializer=UserSerializer(user_data)
             return Response({"message":"Password has been changed","data":serializer.data,"status ": status.HTTP_201_CREATED})
-        
+
+class userDetails(generics.RetrieveUpdateDestroyAPIView):
+        queryset = user.objects.all()
+        serializer_class = UserSerializer
+        filter_backends = [filters.SearchFilter]
+        search_fields = ['=id']
+        def patch(self, request, *args, **kwargs):
+            try:
+                 user_data= user.objects.get(id=kwargs["id"])
+                 serializer=UserSerializer(user_data,data=request.data,partial=True)
+                 if serializer.is_valid():
+                    serializer.save()
+                    return Response({"data":serializer.data,"status ": status.HTTP_201_CREATED})
+            except user.DoesNotExist:
+                    return Response({"message":"user doesnot exits","status ": status.HTTP_400_BAD_REQUEST})
+
 class seachThroughRole(generics.ListAPIView):
         queryset = user.objects.all()
         serializer_class = UserSerializer
@@ -91,5 +107,5 @@ class RoleDetails(generics.RetrieveUpdateDestroyAPIView):
         queryset=role.objects.all()
         serializer_class = RoleSerializer
         filter_backends = [filters.SearchFilter]
-        search_fields = ['=name']
+        search_fields = ['=pk']
 

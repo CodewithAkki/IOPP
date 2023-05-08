@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Goal,Milestone,Domain,Project,Repository,Group,Approve,Assignment
-from .serializers import AssignmentSerializer,GoalSerializer,DomainstoneSerializer,ProjectSerializer,RepositorySerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
+from .models import Goal,Milestone,Domain,Project,Group,Approve,Assignment
+from .serializers import AssignmentSerializer,GoalSerializer,DomainstoneSerializer,ProjectSerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +8,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from users.models import role
+
 # Create your views here.
 class CreateListGoal(generics.ListCreateAPIView):
     queryset=Goal.objects.all()
@@ -24,10 +25,8 @@ class CreateListGroup(generics.ListCreateAPIView):
 class CreateProject(generics.ListCreateAPIView):
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
+    
 
-class CreateListRepository(generics.ListCreateAPIView):
-    queryset=Repository.objects.all()
-    serializer_class=RepositorySerializer
 
 class CreateListApprove(generics.ListCreateAPIView):
     queryset=Approve.objects.all()
@@ -93,12 +92,15 @@ class UpdateDeleteRetriveProject(generics.RetrieveUpdateDestroyAPIView):
     filter_backends=[filters.SearchFilter]
     search_fields=['=id']
 
-class UpdateDeleteRetriveRepository(generics.RetrieveUpdateDestroyAPIView):
-    
-    queryset=Repository.objects.all()
-    serializer_class=RepositorySerializer
-    filter_backends=[filters.SearchFilter]
-    search_fields=['=id']
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs["id"])
+        group=Group.objects.get(id=kwargs["id"])
+        serializer=ProjectSerializer(project)
+        print(serializer.data)
+        serializer.data
+        serializer.data["Group"]
+        return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+
 
 class UpdateDeleteRetriveApproval(generics.RetrieveUpdateDestroyAPIView):
    
@@ -121,7 +123,7 @@ class AssignedProjects(generics.ListAPIView):
             assignment=Assignment.objects.get(hod=kwargs['id_role'])
         elif str(name).capitalize() == "Dean":
             assignment=Assignment.objects.get(dean=kwargs['id_role'])
-        elif str(name).capitalize() == "Aictemember":
+        elif str(name).capitalize() == "Aicte member":
             assignment=Assignment.objects.get(AicteMember=kwargs['id_role'])
         elif str(name).capitalize() == "Student":
             Project.object.filter()

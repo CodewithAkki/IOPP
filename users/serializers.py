@@ -10,7 +10,7 @@ class UserSerializer (serializers.ModelSerializer):
             'last_name',
             'college',
             'department',
-            'designation',
+            'university',
             'phone_no',
             'address',
             'birthdate',
