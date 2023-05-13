@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Goal,Milestone,Assignment,Domain,Project,Group,Approve
+from .models import hodrecord,deanrecord, aicterecord ,guidrecord, Goal,Milestone,Assignment,Domain,Project,Group,Approve
 
 class GoalSerializer (serializers.ModelSerializer):
     class Meta:
@@ -25,8 +25,22 @@ class ApprovalSerializer (serializers.ModelSerializer):
         model=Approve
         fields = '__all__'
 
-
-
+class guidrecordSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model=guidrecord
+        field='__all__'
+class hodrecordSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model=hodrecord
+        field='__all__'
+class deanrecordSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model=deanrecord
+        field='__all__'
+class aicterecordSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model=aicterecord
+        field='__all__'
 class GroupSerializer (serializers.ModelSerializer):
     class Meta:
         model=Group

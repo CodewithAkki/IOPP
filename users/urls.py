@@ -9,4 +9,5 @@ urlpatterns = [
     path('delusers/',deleteAll.as_view()),
     path('role/',RoleInfo.as_view()),
     path('role/<int:pk>',RoleDetails.as_view()),
+ 
 ]

@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import CreateMailestone,CreateListApprove,CreateListDomain,CreateListGoal,CreateListGroup,CreateProject
 from .views import searchByproject,guidtohod,projectguid,AssignmentGuidsDetail,AssignedProjects,AssignmentGuidsUpdate,UpdateDeleteRetriveMailestone,UpdateDeleteRetriveApproval,UpdateDeleteRetriveDomain,UpdateDeleteRetriveGoal,UpdateDeleteRetriveGroup,UpdateDeleteRetriveProject
-from .views import hodtodean,deantoAicte
+from .views import hodtodean,deantoAicte,guidtohod
 urlpatterns = [
     
     path('Approve/',CreateListApprove.as_view()),
@@ -24,7 +24,7 @@ urlpatterns = [
     path('Assigned/<str:role>/<int:userid>',AssignedProjects.as_view()),
     path('assignedguid/<int:guid>',projectguid.as_view()),
 
-    path('guidtohod/<str:college>/<int:projectid>',guidtohod.as_view()),
-    path('hodtodean/<str:college>/<int:projectid>',hodtodean.as_view()),
-    path('deantoaicte/<str:college>/<int:projectid>',deantoAicte.as_view()),
+    path('guidtohod/<str:college>/<uuid:id>',guidtohod.as_view()),
+    path('hodtodean/<str:college>/<uuid:id>',hodtodean.as_view()),
+    path('deantoaicte/<str:college>/<uuid:id>',deantoAicte.as_view())
 ]

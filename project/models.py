@@ -156,3 +156,37 @@ class Approve(models.Model):
 
     def __str__(self):
         return self.project
+    
+
+class guidrecord(models.Model):
+    id=models.AutoField(primary_key=True)
+    guid=models.ForeignKey(user,on_delete=CASCADE,related_name="guidrecord")
+    project=models.ForeignKey(Project,on_delete=CASCADE,related_name="guidprojectrecord")
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['guid','project'],name="guidrecordunique")
+        ]
+class hodrecord(models.Model):
+    id=models.AutoField(primary_key=True)
+    hod=models.ForeignKey(user,on_delete=CASCADE,related_name="hodrecord")
+    project=models.ForeignKey(Project,on_delete=CASCADE,related_name="hodprojectrecord")
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['hod','project'],name="hodrecordunique")
+        ]
+class deanrecord(models.Model):
+    id=models.AutoField(primary_key=True)
+    dean=models.ForeignKey(user,on_delete=CASCADE,related_name="deanrecord")
+    project=models.ForeignKey(Project,on_delete=CASCADE,related_name="deanprojectrecord")
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['dean','project'],name="deanrecordunique")
+        ]
+class aicterecord(models.Model):
+    id=models.AutoField(primary_key=True)
+    aicte=models.ForeignKey(user,on_delete=CASCADE,related_name="aicterecord")
+    project=models.ForeignKey(Project,on_delete=CASCADE,related_name="aicteprojectrecord")
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['aicte','project'],name="aicterecordunique")
+        ]

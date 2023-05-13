@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Goal,Milestone,Domain,Project,Group,Approve,Assignment
-from .serializers import AssignmentSerializer,GoalSerializer,DomainstoneSerializer,ProjectSerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
+from .models import guidrecord,Goal,Milestone,Domain,Project,Group,Approve,Assignment,hodrecord,aicterecord,deanrecord
+from .serializers import deanrecordSerilizer,aicterecordSerilizer,guidrecordSerilizer,hodrecordSerilizer,AssignmentSerializer,GoalSerializer,DomainstoneSerializer,ProjectSerializer,ApprovalSerializer,MailestoneSerializer,GroupSerializer,DomainstoneSerializer 
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -191,38 +191,73 @@ class searchproject(generics.RetrieveAPIView):
         project=Project.objects.filter(guid=kwargs['guid'])
         serializer=ProjectSerializer(project,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
-class guidtohod(generics.CreateAPIView):
+    
+class guidtohod(generics.ListAPIView,generics.DestroyAPIView):
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
-    def post(self, request, *args, **kwargs):
-        project=Project.objects.get(id=kwargs['projectId'])
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['id'])
         Hod=role.objects.get(name="Hod")
         userdata=user.objects.get(college=kwargs['college'],role=Hod)
+        userguid=user.objects.get(id=2)
+        guidrecord.objects.get_or_create(guid=userguid,project=project)
+        project.guid=None
         project.hod=userdata
+        project.save()
+        
+        serializer=ProjectSerializer(project)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    def delete(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['id'])
+        guids=guidrecord.objects.get(project=project)
+        project.guid=guids
+        project.hod=None
         project.save()
         serializer=ProjectSerializer(project)
         return Response(serializer.data,status=status.HTTP_200_OK)
-
-class hodtodean(generics.CreateAPIView):
+    
+class hodtodean(generics.ListAPIView, generics.DestroyAPIView):
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
-    def post(self, request, *args, **kwargs):
-        project=Project.objects.get(id=kwargs['projectId'])
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['id'])
         Dean=role.objects.get(name="Dean")
         userdata=user.objects.get(college=kwargs['college'],role=Dean)
+        userhod=user.objects.get(id=project.hod.id)
+        hodrecord.objects.get_or_create(hod=userhod,project=project)
         project.dean=userdata
         project.save()
         serializer=ProjectSerializer(project)
         return Response(serializer.data,status=status.HTTP_200_OK)
+    def delete(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['id'])
+        hod=hodrecord.objects.get(project=project)
+        project.hod=hod
+        project.dean=None
+        project.save()
+        serializer=ProjectSerializer(project)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
-class deantoAicte(generics.CreateAPIView):
+class deantoAicte(generics.ListAPIView,generics.DestroyAPIView):
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
-    def post(self, request, *args, **kwargs):
-        project=Project.objects.get(id=kwargs['projectId'])
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['id'])
         Aicte=role.objects.get(name="Aicte member")
         userdata=user.objects.get(college=kwargs['college'],role=Aicte)
+        userdean=user.objects.get(id=project.dean__id)
+        deanrecord.objects.get_or_create(dean=userdean,project=project)
         project.aicte=userdata
         project.save()
         serializer=ProjectSerializer(project)
-        return Response(serializer.data,status=status.HTTP_200_OK)   
+        return Response(serializer.data,status=status.HTTP_200_OK)  
+    def delete(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['id'])
+        dean=deanrecord.objects.get(project=project)
+        project.dean=dean
+        project.aicte=None
+        project.save()
+        serializer=ProjectSerializer(project)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+  
