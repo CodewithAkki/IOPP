@@ -34,7 +34,7 @@ class CreateUser (generics.ListCreateAPIView):
             try:
                 user_data = user.objects.all()
                 serializer=UserSerializer(user_data,many=True)
-                return Response({"data":serializer.data,"status ": status.HTTP_201_CREATED})
+                return Response(serializer.data,status = status.HTTP_201_CREATED)
             except user.DoesNotExist:
                 return Response({"data":"table not exists","status ": status.HTTP_401_UNAUTHORIZED})
                  
@@ -47,12 +47,19 @@ class UpdateDeleteRetrive(generics.RetrieveUpdateDestroyAPIView):
         search_fields = ['^email']
 
         def patch(self, request, *args, **kwargs):
-            user_data= user.objects.get(email=kwargs["pk"])
+            user_data= user.objects.get(id=kwargs["id"])
             user_data.set_password(request.data['password'])
             user_data.save()
             serializer=UserSerializer(user_data)
             return Response({"message":"Password has been changed","data":serializer.data,"status ": status.HTTP_201_CREATED})
-
+class searchguid(generics.ListAPIView):
+     queryset=user.objects.all()
+     serializer_class=UserSerializer
+     def get(self, request, *args, **kwargs):
+          user_data=user.objects.get(id=kwargs['id'])
+          serializer=UserSerializer(user_data)
+          return Response(serializer.data,status=status.HTTP_200_OK)
+     
 class userDetails(generics.RetrieveUpdateDestroyAPIView):
         queryset = user.objects.all()
         serializer_class = UserSerializer

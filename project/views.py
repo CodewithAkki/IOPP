@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from users.models import role
 from users.models import user
-
+import json
 
 # Create your views here.
 class CreateListGoal(generics.ListCreateAPIView):
@@ -40,8 +40,17 @@ class CreateListGroup(generics.ListCreateAPIView):
 class CreateProject(generics.ListCreateAPIView):
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
-    
 
+class projectguid(generics.ListCreateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    def get(self, request, *args, **kwargs):
+       project= Project.objects.filter(guid=kwargs['guid'])
+       guid=user.objects.get(id=kwargs['guid'])
+       for i in project:
+            Assignment.objects.get_or_create(project=i,guid=guid)
+       serializer=ProjectSerializer(project,many=True)
+       return Response(serializer.data,status=status.HTTP_200_OK)
 
 class CreateListApprove(generics.ListCreateAPIView):
     queryset=Approve.objects.all()
@@ -120,12 +129,16 @@ class UpdateDeleteRetriveDomain(generics.RetrieveUpdateDestroyAPIView):
     search_fields=['=id']
 
 class UpdateDeleteRetriveProject(generics.RetrieveUpdateDestroyAPIView):
-    
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
     filter_backends=[filters.SearchFilter]
     search_fields=['=id']
-
+    def patch(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs["id"])
+        serializer=ProjectSerializer(project,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
     def get(self, request, *args, **kwargs):
         project=Project.objects.get(id=kwargs["id"])
         group=Group.objects.get(id=kwargs["id"])
@@ -171,3 +184,45 @@ class searchByproject(generics.ListAPIView):
         approve=Approve.objects.get(project=project)
         serializer=ApprovalSerializer(approve,data=request.data,partial=True)
         return Response(serializer.data)
+class searchproject(generics.RetrieveAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.filter(guid=kwargs['guid'])
+        serializer=ProjectSerializer(project,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+class guidtohod(generics.CreateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    def post(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['projectId'])
+        Hod=role.objects.get(name="Hod")
+        userdata=user.objects.get(college=kwargs['college'],role=Hod)
+        project.hod=userdata
+        project.save()
+        serializer=ProjectSerializer(project)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class hodtodean(generics.CreateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    def post(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['projectId'])
+        Dean=role.objects.get(name="Dean")
+        userdata=user.objects.get(college=kwargs['college'],role=Dean)
+        project.dean=userdata
+        project.save()
+        serializer=ProjectSerializer(project)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class deantoAicte(generics.CreateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    def post(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['projectId'])
+        Aicte=role.objects.get(name="Aicte member")
+        userdata=user.objects.get(college=kwargs['college'],role=Aicte)
+        project.aicte=userdata
+        project.save()
+        serializer=ProjectSerializer(project)
+        return Response(serializer.data,status=status.HTTP_200_OK)   

@@ -52,11 +52,16 @@ class Project (models.Model):
     type=models.CharField(max_length=10 , default='public')
     domain = models.ForeignKey(Domain,null=True,blank=False,on_delete=CASCADE)
     description = models.TextField()
-    leader=models.ForeignKey(user,on_delete=CASCADE)
+    leader=models.ForeignKey(user,on_delete=CASCADE,related_name="leader_project",blank=True)
+    guid=models.ForeignKey(user,on_delete=CASCADE,related_name="guid_project",blank=True,null=True)
+    hod=models.ForeignKey(user,on_delete=CASCADE,related_name="hod_project",blank=True,null=True)
+    dean=models.ForeignKey(user,on_delete=CASCADE,related_name="dean_project",blank=True,null=True)
+    aicte=models.ForeignKey(user,on_delete=CASCADE,related_name="aicte_project",blank=True,null=True)
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['name'], name='Unique_entries_project')
         ]
+        
 class Assignment(models.Model):
     id = models.UUIDField(primary_key=True,editable=False,default=uuid4)
     guid=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='guid')
@@ -66,17 +71,33 @@ class Assignment(models.Model):
     project = models.ForeignKey(Project,null=True,blank=False,on_delete=CASCADE)
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['guid','teacher','hod','dean','AicteMember','project'], name='Unique_entries_assigned')
+            models.UniqueConstraint(fields=['guid','hod','dean','AicteMember','project'], name='Unique_entries_assigned')
         ]
 
-@receiver(post_save,sender=Project)
-def create_auth_token(sender,instance = None,created=False,**kwargs):
-    if created:
-        leader = user.objects.get(user=instance.leader)
-        Hod=user.objects.get(college=leader.college,role=3)
-        Dean=user.objects.get(college=leader.college,role=5)
-        AicteMember=user.objects.get(college=leader.college,role=4)
-        Assignment.objects.create(hod=Hod,dean=Dean,project=instance,AicteMember=AicteMember)
+class HodApproval(models.Model):
+    id=models.AutoField(primary_key=True)
+    hod=models.ForeignKey(user,on_delete=CASCADE,blank=True,null=True)
+    project=models.ForeignKey(Project,on_delete=CASCADE,blank=True,null=True)
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['hod','project'],name="uniqueHodApproval")
+        ] 
+class DeanApproval(models.Model):
+    id=models.AutoField(primary_key=True)
+    Dean=models.ForeignKey(user,on_delete=CASCADE,blank=True,null=True)
+    project=models.ForeignKey(Project,on_delete=CASCADE,blank=True,null=True)
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['Dean','project'],name="uniqueDeanApproval")
+        ]  
+class AicteApproval(models.Model):
+    id=models.AutoField(primary_key=True)
+    Aicte=models.ForeignKey(user,on_delete=CASCADE,blank=True,null=True)
+    project=models.ForeignKey(Project,on_delete=CASCADE,blank=True,null=True)
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['Aicte','project'],name="uniqueAicteApproval")
+        ] 
 
 '''
   {
