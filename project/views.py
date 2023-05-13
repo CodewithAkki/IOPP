@@ -211,7 +211,8 @@ class guidtohod(generics.ListAPIView,generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         project=Project.objects.get(id=kwargs['id'])
         guids=guidrecord.objects.get(project=project)
-        project.guid=guids
+        userdean=user.objects.get(id=guids.guid.id)
+        project.guid=userdean
         project.hod=None
         project.save()
         serializer=ProjectSerializer(project)
@@ -226,14 +227,16 @@ class hodtodean(generics.ListAPIView, generics.DestroyAPIView):
         userdata=user.objects.get(college=kwargs['college'],role=Dean)
         userhod=user.objects.get(id=project.hod.id)
         hodrecord.objects.get_or_create(hod=userhod,project=project)
+        project.hod=None
         project.dean=userdata
         project.save()
         serializer=ProjectSerializer(project)
         return Response(serializer.data,status=status.HTTP_200_OK)
     def delete(self, request, *args, **kwargs):
         project=Project.objects.get(id=kwargs['id'])
-        hod=hodrecord.objects.get(project=project)
-        project.hod=hod
+        hods=hodrecord.objects.get(project=project)
+        userdean=user.objects.get(id=hods.hod.id)
+        project.hod=userdean
         project.dean=None
         project.save()
         serializer=ProjectSerializer(project)
@@ -246,16 +249,19 @@ class deantoAicte(generics.ListAPIView,generics.DestroyAPIView):
         project=Project.objects.get(id=kwargs['id'])
         Aicte=role.objects.get(name="Aicte member")
         userdata=user.objects.get(college=kwargs['college'],role=Aicte)
-        userdean=user.objects.get(id=project.dean__id)
+        userdean=user.objects.get(id=project.dean.id)
         deanrecord.objects.get_or_create(dean=userdean,project=project)
+        project.dean=None
         project.aicte=userdata
         project.save()
         serializer=ProjectSerializer(project)
         return Response(serializer.data,status=status.HTTP_200_OK)  
     def delete(self, request, *args, **kwargs):
         project=Project.objects.get(id=kwargs['id'])
-        dean=deanrecord.objects.get(project=project)
-        project.dean=dean
+        deans=deanrecord.objects.get(project=project)
+        print(deans.dean.id)
+        userdean=user.objects.get(id=deans.dean.id)
+        project.dean=userdean
         project.aicte=None
         project.save()
         serializer=ProjectSerializer(project)
