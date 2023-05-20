@@ -135,7 +135,7 @@ class SendEmail(APIView):
             print(request.data['email'])
             user_data=user.objects.get(email=request.data['email'])
             if user_data:
-                    send_mail('✋feedback from website',"http://localhost:8000/users/SendEmail/",'akkimithari@gmail.com',[user_data.email],fail_silently=False)
+                    send_mail('✋HI change your password',"http://localhost:8000/users/SendEmail/",'akkimithari@gmail.com',[user_data.email],fail_silently=False)
                     return Response('email is send ',status=status.HTTP_201_CREATED)
         except:    
             return Response('USER NOT FOUND',status=status.HTTP_401_UNAUTHORIZED)
