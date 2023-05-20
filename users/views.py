@@ -9,7 +9,9 @@ from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status 
 import json
+from django.core.mail import send_mail
 from rest_framework.views import APIView
+from django.shortcuts import render
 # Create your views here.
 
 class CreateUser (generics.ListCreateAPIView):
@@ -44,14 +46,15 @@ class UpdateDeleteRetrive(generics.RetrieveUpdateDestroyAPIView):
         queryset = user.objects.all()
         serializer_class = UserSerializer
         filter_backends = [filters.SearchFilter]
-        search_fields = ['^email']
+        search_fields = ['=id']
 
         def patch(self, request, *args, **kwargs):
             user_data= user.objects.get(id=kwargs["id"])
             user_data.set_password(request.data['password'])
             user_data.save()
             serializer=UserSerializer(user_data)
-            return Response({"message":"Password has been changed","data":serializer.data,"status ": status.HTTP_201_CREATED})
+            return Response(serializer.data,status.HTTP_201_CREATED)
+        
 class searchguid(generics.ListAPIView):
      queryset=user.objects.all()
      serializer_class=UserSerializer
@@ -125,4 +128,18 @@ class collegeDetails(generics.ListCreateAPIView):
 class universityDetails(generics.ListCreateAPIView):
     queryset=University.objects.all()
     serializer_class=UniversitySerializer
-    
+
+class SendEmail(APIView):
+    def post(self,request,*args, **kwargs):
+        try:
+            print(request.data['email'])
+            user_data=user.objects.get(email=request.data['email'])
+            if user_data:
+                    send_mail('✋feedback from website',"http://localhost:8000/users/SendEmail/",'akkimithari@gmail.com',[user_data.email],fail_silently=False)
+                    return Response('email is send ',status=status.HTTP_201_CREATED)
+        except:    
+            return Response('USER NOT FOUND',status=status.HTTP_401_UNAUTHORIZED)
+
+    def get(self,request,*args, **kwargs):
+        return render(request,"forgotPassword.html")
+         
