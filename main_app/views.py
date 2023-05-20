@@ -27,10 +27,10 @@ class login(ObtainAuthToken):
                     'role':userRole.name,
                     'first_name':user_data.first_name,
                     'last_name':user_data.last_name,
-                    'college':user_data.college,
+                    'college':user_data.college.collegeName,
                     'phone_no':user_data.phone_no,
                     'picture':user_data.profilePic,
-                    'university':user_data.university,
+                    'university':user_data.university.UniversityName,
                     'department':user_data.department,
                     'address':user_data.address
                     })

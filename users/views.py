@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import user,role
-from .serializers import UserSerializer,RoleSerializer
+from .models import user,role,college,University
+from .serializers import UserSerializer,RoleSerializer,CollegeSerializer,UniversitySerializer
 from rest_framework import generics
 from django_genericfilters.views import FilteredListView
 from rest_framework.authentication import TokenAuthentication
@@ -79,20 +79,21 @@ class seachThroughRole(generics.ListAPIView):
         queryset = user.objects.all()
         serializer_class = UserSerializer
         def get(self, request, *args, **kwargs):
+            querysets=""
             if str(kwargs['role']).capitalize() == "Teacher":
-                queryset = role.objects.filter(name="Teacher")
+                querysets = role.objects.filter(name="Teacher")
             elif str(kwargs['role']).capitalize()== "Guid":
-                queryset = role.objects.filter(name="Guid")
+                querysets = role.objects.filter(name="Guid")
             elif str(kwargs['role']).capitalize() == "Hod":
-                queryset = role.objects.filter(name="Hod")
+                querysets = role.objects.filter(name="Hod")
             elif str(kwargs['role']).capitalize() == "Dean":
-                queryset = role.objects.filter(name="Dean")
+                querysets = role.objects.filter(name="Dean")
             elif str(kwargs['role']).capitalize() == "Aicte member":
-                queryset = role.objects.filter(name="AICTE member")
+                querysets = role.objects.filter(name="AICTE member")
             elif str(kwargs['role']).capitalize() == "Student":
-                queryset = role.objects.filter(name="Student")
+                querysets = role.objects.filter(name="Student")
             listUserData=list()
-            for objs in queryset:
+            for objs in querysets:
                 user_data=user.objects.filter(role=objs)
                 serializer=UserSerializer(user_data,many=True)
                 
@@ -116,3 +117,12 @@ class RoleDetails(generics.RetrieveUpdateDestroyAPIView):
         filter_backends = [filters.SearchFilter]
         search_fields = ['=pk']
 
+class collegeDetails(generics.ListCreateAPIView):
+    queryset=college.objects.all()
+    serializer_class=CollegeSerializer
+
+
+class universityDetails(generics.ListCreateAPIView):
+    queryset=University.objects.all()
+    serializer_class=UniversitySerializer
+    

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CreateUser,searchguid,userDetails ,RoleInfo, RoleDetails, deleteAll,UpdateDeleteRetrive , seachThroughRole
+from .views import universityDetails,collegeDetails,CreateUser,searchguid,userDetails ,RoleInfo, RoleDetails, deleteAll,UpdateDeleteRetrive , seachThroughRole
 urlpatterns = [
     path('',CreateUser.as_view()),
     path('guid/<int:id>',searchguid.as_view()),
@@ -9,5 +9,6 @@ urlpatterns = [
     path('delusers/',deleteAll.as_view()),
     path('role/',RoleInfo.as_view()),
     path('role/<int:pk>',RoleDetails.as_view()),
- 
+    path('college/',collegeDetails.as_view()),
+    path('university/',universityDetails.as_view()),
 ]

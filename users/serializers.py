@@ -1,4 +1,4 @@
-from .models import user,role
+from .models import user,role,college,University
 from rest_framework import serializers
 
 class UserSerializer (serializers.ModelSerializer):
@@ -25,3 +25,14 @@ class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = role
         fields='__all__'
+
+class CollegeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = college
+        fields='__all__'
+
+class UniversitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = University
+        fields='__all__'
+

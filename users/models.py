@@ -17,16 +17,27 @@ from django.db.models.deletion import CASCADE
 class role(models.Model):
     id=models.AutoField(primary_key=True)
     name=models.CharField(max_length=200)
-    
+
+class University(models.Model):
+    id=models.AutoField(primary_key=True)
+    UniversityName=models.CharField(max_length=200,null=True,default=" ")
+
+class college(models.Model):
+    code = models.AutoField(primary_key=True)
+    collegeName=models.CharField(max_length=200,null=True,default=" ")
+    Type=models.CharField(max_length=200,null=True,default=" ")
+    University=models.ForeignKey(University,on_delete=CASCADE)
+
+
 class user (AbstractUser):
     #username = models.CharField(max_length=200,unique=True)
     username = None
     id=models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=200,null=True,default=" ")
     last_name = models.CharField(max_length=200,null=True,default=" ")
-    college =models.CharField(max_length=200,null=True,default=" ")
+    college =models.ForeignKey(college,on_delete=CASCADE)
     department=models.CharField(max_length=200,null=True,default=" ",blank=True)
-    university= models.CharField(max_length=200,default=" ",null=True,blank=True)
+    university= models.ForeignKey(University,on_delete=CASCADE)
     phone_no = models.CharField(max_length=15,null=True,default=None)
     address=models.CharField(max_length=200,null=True,default=" ")
     birthdate=models.DateField(null=True,default=None)
