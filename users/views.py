@@ -125,7 +125,7 @@ class collegeDetails(generics.ListCreateAPIView):
     serializer_class=CollegeSerializer
 
 
-class universityDetails(generics.ListCreateAPIView):
+class universityDetails(generics.ListCreateAPIView , generics.UpdateAPIView):
     queryset=University.objects.all()
     serializer_class=UniversitySerializer
 
@@ -142,4 +142,11 @@ class SendEmail(APIView):
 
     def get(self,request,*args, **kwargs):
         return render(request,"forgotPassword.html")
+    
+    def patch(self, request, *args, **kwargs):
+            user_data= user.objects.get(email=request.data['email'])
+            user_data.set_password(request.data['password'])
+            user_data.save()
+            serializer=UserSerializer(user_data)
+            return Response(serializer.data,status.HTTP_201_CREATED)
          
