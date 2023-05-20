@@ -147,6 +147,12 @@ class UpdateDeleteRetriveProject(generics.RetrieveUpdateDestroyAPIView):
         serializer.data
         serializer.data["Group"]
         return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+    def delete(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs["id"])
+        serializer=ProjectSerializer(project)
+        project.delete()
+        return Response({"data":serializer.data,"status":status.HTTP_201_CREATED})
+    
 
 
 class UpdateDeleteRetriveApproval(generics.RetrieveUpdateDestroyAPIView):
