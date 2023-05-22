@@ -23,11 +23,13 @@ class login(ObtainAuthToken):
                     "message":'login successfully',
                     'token': token.key,
                     'userId': user_data.pk,
+                    
                     'email': user_data.email,
                     'role':userRole.name,
                     'first_name':user_data.first_name,
                     'last_name':user_data.last_name,
                     'college':user_data.college.collegeName,
+                    'collegeId':user_data.college.code,
                     'phone_no':user_data.phone_no,
                     'picture':user_data.profilePic,
                     'university':user_data.university.UniversityName,

@@ -6,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from rest_framework.response import Response
+from django.http import HttpResponse
 from rest_framework import status
 from users.models import role
 from users.models import user
@@ -40,6 +41,58 @@ class CreateListGroup(generics.ListCreateAPIView):
 class CreateProject(generics.ListCreateAPIView):
     queryset=Project.objects.all()
     serializer_class=ProjectSerializer
+import json
+class CreateProject1(generics.ListCreateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.all()
+        obj=dict()
+        objlist=list()
+        for obj1 in project:
+            obj['id']=str(obj1.id)
+            obj['name']=obj1.name
+            obj['patentNo']=obj1.patentNo
+            obj['AcademicYear']=obj1.AcademicYear
+            obj['semester']=obj1.semester
+            obj['patent_info']=obj1.patent_info
+            obj['isapproved']=obj1.isapproval
+            obj['start_date']=str(obj1.start_date)
+            obj['end_date']=str(obj1.end_date)
+            obj['Storage_link']=obj1.Storage_link
+            obj['type']=obj1.type
+            obj['domain']=obj1.domain.name
+            obj['semester']=obj1.semester
+            obj['description']=obj1.description
+            obj['college']=obj1.leader.college.collegeName
+            obj['state']=obj1.leader.address
+            obj['university']=obj1.leader.university.UniversityName
+            obj['department']=obj1.leader.department
+            obj['message']=obj1.message
+            obj['leader']=obj1.leader.first_name+" "+obj1.leader.last_name
+            obj['guid']=obj1.guid.first_name+" "+obj1.guid.last_name
+            obj['hod']=obj1.hod if obj1.hod==None else obj1.hod.first_name+" "+obj1.hod.last_name,
+            obj['dean']=obj1.dean if obj1.dean==None else obj1.dean.first_name+" "+obj1.dean.last_name,
+            obj['aicte']=obj1.aicte if obj1.aicte==None else obj1.aicte.first_name+" "+obj1.aicte.last_name,
+            
+            objlist.append(obj.copy())
+            obj.clear()
+        return HttpResponse(json.dumps(objlist),status=status.HTTP_200_OK)
+
+class updateProject(generics.RetrieveUpdateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['=pk']
+    def patch(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['pk'])
+        project.message=request.data['message']
+        project.save()
+        serializer=ProjectSerializer(project,data=request.data,partial=True)
+        if serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        
 
 class projectguid(generics.ListCreateAPIView):
     queryset=Project.objects.all()
@@ -127,6 +180,37 @@ class UpdateDeleteRetriveDomain(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=DomainstoneSerializer
     filter_backends=[filters.SearchFilter]
     search_fields=['=id']
+class UpdateSINGLEProject(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['=pk']
+    
+    def get(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['pk'])
+        
+        return Response({
+            "AcademicYear": project.AcademicYear,
+"Storage_link": project.Storage_link,
+"aicte": project.aicte,
+"dean": project.dean,
+"description": project.description,
+"domain": project.domain.name,
+"end_date": project.end_date,
+"guid": project.guid.first_name+" "+project.guid.last_name,
+"department":project.guid.department,
+"hod": "" if project.hod==None else project.hod.first_name+" "+project.hod.last_name,
+"id": project.id,
+"leader": project.leader.first_name+" "+project.leader.last_name,
+"name": project.name,
+"patentNo": project.patentNo,
+"patent_info": project.patent_info,
+"semester": project.semester,
+"start_date": project.start_date,
+"type": project.type
+},status=status.HTTP_200_OK)
+    
+
 
 class UpdateDeleteRetriveProject(generics.RetrieveUpdateDestroyAPIView):
     queryset=Project.objects.all()
@@ -273,3 +357,14 @@ class deantoAicte(generics.ListAPIView,generics.DestroyAPIView):
         serializer=ProjectSerializer(project)
         return Response(serializer.data,status=status.HTTP_200_OK)
   
+class updateprojectdata(generics.UpdateAPIView):
+    queryset=Project.objects.all()
+    serializer_class=ProjectSerializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['=pk']
+    def patch(self, request, *args, **kwargs):
+        project=Project.objects.get(id=kwargs['pk'])
+        serializer=ProjectSerializer(project,data=request.data,partial=True)
+        if serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)

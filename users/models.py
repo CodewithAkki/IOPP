@@ -45,6 +45,7 @@ class user (AbstractUser):
     role=models.ForeignKey(role,on_delete=CASCADE)
     profilePic = models.URLField(max_length=200,default='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png')
     registerDate = models.DateField(auto_now=True)
+    githublink=models.CharField(max_length=200,default="github",blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects=CustomUserManager()

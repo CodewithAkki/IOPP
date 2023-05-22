@@ -18,7 +18,6 @@ class CreateUser (generics.ListCreateAPIView):
     queryset=user.objects.all()
     serializer_class=UserSerializer
     def post(self, request,format = None):
-        
         user_data = UserSerializer(data = request.data)
         print(user_data)
         if user_data.is_valid():
@@ -144,6 +143,7 @@ class SendEmail(APIView):
         return render(request,"forgotPassword.html")
     
     def patch(self, request, *args, **kwargs):
+            print(request.data['email'])
             user_data= user.objects.get(email=request.data['email'])
             user_data.set_password(request.data['password'])
             user_data.save()
