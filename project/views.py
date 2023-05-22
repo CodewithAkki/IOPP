@@ -364,6 +364,8 @@ class updateprojectdata(generics.UpdateAPIView):
     search_fields=['=pk']
     def patch(self, request, *args, **kwargs):
         project=Project.objects.get(id=kwargs['pk'])
+        project.isapproval="Approved"
+        project.save()
         serializer=ProjectSerializer(project,data=request.data,partial=True)
         if serializer.is_valid():
             return Response(serializer.data,status=status.HTTP_200_OK)
