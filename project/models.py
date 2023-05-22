@@ -65,7 +65,20 @@ class Project (models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name'], name='Unique_entries_project')
         ]
-        
+@receiver(post_save,sender=Project)
+def create_auth_token(sender,instance = None,created=False,**kwargs):
+    if created:
+        try:
+            project = Project.objects.get(user=instance.id)
+            hod=user.objects.get(role=3,college=project.leader.college.code)
+            dean=user.objects.get(role=4,college=project.leader.college.code)
+            project.hod=hod
+            project.dean=dean
+            project.save()
+            
+        except:
+                pass
+
 class Assignment(models.Model):
     id = models.UUIDField(primary_key=True,editable=False,default=uuid4)
     guid=models.ForeignKey(user,null=True,blank=False,on_delete=CASCADE,related_name='guid')
