@@ -69,13 +69,13 @@ class Project (models.Model):
 def create_auth_token(sender,instance = None,created=False,**kwargs):
     if created:
         try:
-            project = Project.objects.get(user=instance.id)
+            project = Project.objects.get(id=instance.id)
             hod=user.objects.get(role=3,college=project.leader.college.code)
             dean=user.objects.get(role=4,college=project.leader.college.code)
             project.hod=hod
             project.dean=dean
             project.save()
-            
+
         except:
                 pass
 
